@@ -7,7 +7,7 @@ class Nhentai extends ComicSource {
     // unique id of the source
     key = "nhentai"
 
-    version = "1.0.13"
+    version = "1.0.14"
 
     minAppVersion = "1.0.0"
 
