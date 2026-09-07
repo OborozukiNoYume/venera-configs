@@ -2,7 +2,7 @@
 class Lanraragi extends ComicSource {
     name = "Lanraragi"
     key = "lanraragi"
-    version = "1.2.0"
+    version = "1.2.1"
     minAppVersion = "1.4.0"
     url = "https://cdn.jsdelivr.net/gh/OborozukiNoYume/venera-configs@main/lanraragi.js"
 
@@ -289,13 +289,21 @@ class Lanraragi extends ComicSource {
                     const idx = v.indexOf('-');
                     if (idx > 0) v = v.slice(0, idx)
                 }
-                return (v === undefined || v === null || v === '') ? def : v
+                if (v === undefined || v === null || v === '') v = def
+                // LANraragi's OpenAPI validation JSON-decodes query params:
+                // booleans must stay bare (false/true). Strip wrapping quotes
+                // in case an upstream layer JSON-encoded the option value.
+                let s = String(v)
+                if (s.length >= 2 && s.startsWith('"') && s.endsWith('"')) {
+                    s = s.slice(1, -1)
+                }
+                return s
             }
             const sortby = pick(0, 'title')
             const order = pick(1, 'asc')
-            const newonly = String(pick(2, 'false'))
-            const untaggedonly = String(pick(3, 'false'))
-            const groupby = String(pick(4, 'true'))
+            const newonly = pick(2, 'false')
+            const untaggedonly = pick(3, 'false')
+            const groupby = pick(4, 'true')
 
             add('filter', (keyword || '').trim())
             add('sortby', sortby)
